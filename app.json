@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "JStore",
-    "slug": "JStore",
+    "slug": "jstore",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -23,10 +23,17 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#FFFFFF"
-      }
+      },
+      "package": "com.albridge.JStore"
     },
     "web": {
       "favicon": "./assets/favicon.png"
-    }
+    },
+    "extra": {
+      "eas": {
+        "projectId": "12447a9d-5705-48b3-85b6-cd043d27fb39"
+      }
+    },
+    "owner": "albridge"
   }
 }
