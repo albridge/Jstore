@@ -1,6 +1,10 @@
 import React, {useState, useEffect} from 'react'
 import {View, Text, TextInput, StyleSheet, Button, Alert, ScrollView} from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+var FormData = require('form-data');
+
+
+
 const IpAddress = ({navigation}) => {
     const [ip,setIpAddress] = useState('');
     const [directory,setDirectory] = useState('');
@@ -141,19 +145,26 @@ const IpAddress = ({navigation}) => {
   const doSaveId = async () => {
    
     try{  
+      
+      const form = new FormData();
+       
+      
       let deviceDetails = {
         device:deviceId           
         };
+
+        form.append( 'ob_data',  JSON.stringify(deviceDetails  ))
     const res = await fetch(      
       "http://"+ip+":80/amonie/index.php?r=site/savedevice",
       {
         method: "POST",
         headers: {
-          // "Accept": "application/json, text/plain, */*", 
-          "Accept": "application/json", 
-          "Content-type": "application/json"
+          
+          // "Accept": "application/json", 
+          // "Content-type": "application/json"
+          'Content-Type':'multipart/form-data'
         },
-        body: JSON.stringify(deviceDetails),
+        body: form,
         
        
       }
@@ -162,14 +173,15 @@ const IpAddress = ({navigation}) => {
     const data = await res.json();
 
     if(data.result==2){      
-      alert('There was a problem')      ;
+      // alert('There was a problem')      ;
+      alert(data.message)
     } else if(data.result==3){
       alert('Device id already exists. Please Enter a different Id');
     
     }else{
       Alert.alert(
         "Success!",
-        "Device Details saved!",
+        "Device authorized and Details saved!",
         [
           {
             text: "OK",
@@ -192,6 +204,36 @@ const IpAddress = ({navigation}) => {
       // console.log(error);
       alert(error);
     }
+  };
+
+  // test get request
+  const getPerson = async () => {
+    if(ip!==null){
+    try{  
+      // let person = {age:7}
+      let person = 10;
+    
+    const res = await fetch(
+      "http://"+ip+":80/amonie/index.php?r=inventory/person&user="+person,
+      {
+        method: "GET",
+        headers: {
+          // "Accept": "application/json, text/plain, */*", 
+          "Accept": "application/json", 
+          "Content-type": "application/json"
+        }
+       
+      }
+    );
+  
+    const data = await res.json();  
+
+  console.log(data)
+   
+    }catch(error){
+      console.log(error);
+    }
+  }
   };
   return (
     <View style={styles.container}>
@@ -253,6 +295,8 @@ const IpAddress = ({navigation}) => {
         {/* <View><Text style={{fontSize:30, color:"white"}}>{deviceId}</Text></View> */}
         <View style={{height:50}}></View>
         <View><Button title="Request Device Authorization" onPress={doSaveId} color="red" /></View>
+        <View style={{height:50}}></View>
+        {/* <View><Button title="Get Person" onPress={getPerson} color="green" /></View> */}
         
       </View>
       </ScrollView>

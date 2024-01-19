@@ -30,6 +30,7 @@ const Details = ({navigation,route}) => {
     const [user, setuser] = useContext(UserContext);
     const [detail, setDetail] = useState([]);
     const [did, setDid] = useState(null);
+    const [directory,setDirectory] = useState('');
 
     const { deal } = route.params;    
     let {id} =  route.params;  
@@ -54,8 +55,11 @@ const Details = ({navigation,route}) => {
       };
 
       useEffect(() => {  
-        getIp();
-      }, []);
+        if(directory)
+        {
+          getIp();
+        }
+      }, [directory]);
 
       
 
@@ -70,7 +74,7 @@ const Details = ({navigation,route}) => {
          
         
         const res = await fetch(
-          "http://"+ipAddress+":80/amonie/index.php?r=inventory/details&id="+id,
+          "http://"+ipAddress+":80/"+directory+"/index.php?r=inventory/details&id="+id,
           {
             method: "GET",
             headers: {
@@ -98,6 +102,10 @@ const Details = ({navigation,route}) => {
         getDetails();
       }, [ipAddress]);
 
+      useEffect(() => {  
+        getDirectory();
+      }, []);
+
       
       const storeAddon = async (id) => {
       try {        
@@ -121,7 +129,7 @@ const Details = ({navigation,route}) => {
       try {
         const value = await AsyncStorage.getItem('@orderId');
         if (value !== null) {
-         console.log("value",value);
+        //  console.log("value",value);
         }else{
           console.log('transactio id not found')
         }
@@ -133,6 +141,19 @@ const Details = ({navigation,route}) => {
 
     const cashFormat = (cash) => {
       return cash.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, "$&,");
+    };
+
+    const getDirectory = async () => {
+      try {
+        const value = await AsyncStorage.getItem('@posdirectory');
+        if (value !== null) {
+          // We have data!!
+          
+          setDirectory(value);
+        }
+      } catch (error) {
+        // Error retrieving data
+      }
     };
 
 

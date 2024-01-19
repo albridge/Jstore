@@ -47,32 +47,9 @@ const Store = ({ navigation }) => {
   const [loggedInUser,setLoggedInUser] = useState('');
   const [showA,setShowA] = useState(true)
   const [user, setuser] = useContext(UserContext);
-  
+  const [directory,setDirectory] = useState('');
 
 
-  useEffect(() => {
-    getIp();
-  }, []);
-
-  useEffect(() => {
-   gas();     
-  }, [ipAddress]);
-
-  useEffect(() => {
-    setCart(cart);    
-  }, [cart]);
-
-  useEffect(()=>{
-    // buildCount()   ;
-  },[])
-
-  useEffect(() => {
-    retrieveData();
-  }, []);
-
-  useEffect(() => {
-    freeCount();
-  }, [cart]);
 
   const buildCount = () =>{
     if(cart.length>0)
@@ -89,11 +66,16 @@ const Store = ({ navigation }) => {
   }
 
  // i would have and can still put getbroadcategory straight inside useeffect but i did it like this to test the activity indicator with the settimeout
-function gas (){
-  // setTimeout(() => {
+
+
+
+useEffect(() => {
+  if(ipAddress && directory)
+  {
     getBroadCategory();
-  // }, 3000);
-}
+  }
+}, [ipAddress,directory])
+
 
   const getIp = async () => {
     try {
@@ -118,11 +100,12 @@ function gas (){
   }
 //
   const getBroadCategory = async () => {
-    if(ipAddress!==null){
+  
+    if(ipAddress!=null && directory!=null){
     try{  
      setShowA(true)
     const res = await fetch(
-      "http://"+ipAddress+":80/amonie/index.php?r=inventory/categories",
+      "http://"+ipAddress+":80/"+directory+"/index.php?r=inventory/categories",
       {
         method: "GET",
         headers: {
@@ -151,7 +134,7 @@ function gas (){
     setShowA(true);
     try{
     const res = await fetch(
-      "http://"+ipAddress+":80/amonie/index.php?r=inventory/categories2&id="+id,
+      "http://"+ipAddress+":80/"+directory+"/index.php?r=inventory/categories2&id="+id,
       {
         method: "GET",
         headers: {
@@ -174,9 +157,9 @@ function gas (){
   };
 
   const saveToCart = (data) => {
- counting(data.id)
+
     const exist = cart.find((x) => x.id === data.id);
-    if (exist && counts.length>0) {
+    if (exist) {
       setCart(
         cart.map((x) =>
           x.id === data.id ? { ...exist, qty: (exist.qty += 1) } : x
@@ -199,7 +182,7 @@ function gas (){
   };
 
   const Subtract = (item) => {
-    subCounting(item.id)
+  
     let data = item;
     let nItem = null;
     const exist = cart.find((x) => x.id === data.id);
@@ -251,7 +234,7 @@ function gas (){
     setShowA(true)
     try{
     const res = await fetch(
-      "http://"+ipAddress+":80/amonie/index.php?r=inventory/menu&id="+id,
+      "http://"+ipAddress+":80/"+directory+"/index.php?r=inventory/menu&id="+id,
       {
         method: "GET",
         headers: {
@@ -289,17 +272,13 @@ function gas (){
     }
   };
 
-  useEffect(() => {
-    getIp();  
-  }, []);
-
   // useEffect(() => {
-  //   getTid(); 
+  //  if(directory){
+  //   getIp(); 
+  //  } 
   // }, []);
 
-  // useLayoutEffect(() => {
-  //   getTid(); 
-  // }, [tid]);
+
 
 
   const getTid = async () => {
@@ -320,36 +299,9 @@ function gas (){
   };
 
 
-  
-  
-const counting = (id) =>{ 
-  id = parseInt(id)
-  const exist = counts.find((x) =>x.key === id);
-  if (exist) {    
-    setCounts(
-      counts.map((x) =>
-        x.key === id ? { ...exist, value: (exist.value += 1) } : x
-      )
-    );
-  } else {
-    setCounts([...counts,  {key:id,value: 1 }]);
-  }
-  
-}
 
-const subCounting = (id) =>{ 
-  id = parseInt(id)
-  const exist = counts.find((x) =>x.key === id);
-  if (exist) {    
-    setCounts(
-      counts.map((x) =>
-        x.key === id ? { ...exist, value: (exist.value -= 1) } : x
-      )
-    );
-  }
-  // console.log(counts)
-}
 
+// this function is no longer in use. remove this comment if you decide to start using
 const getCount = (id) =>{
   id = parseInt(id)
   let target = counts.find((x) =>x.key === id);
@@ -360,25 +312,60 @@ const getCount = (id) =>{
   }
 }
 
-// var counts2 = [{"key":58,"value":12},{"key":51,"value":27}];
-// const counting2 = (id) =>{ 
-//   id = parseInt(id)
-//   // console.log(id)
-//   const exist = counts2.find((x) =>x.key === id);
-//   if (exist) {
-//     // console.log('fount it')
-    
-//       counts2.map((x2) => 
-//         x2.key === id ? { ...exist, value: (exist.value += 1) } : x2
-//       )
-  
-//   } else {
-//    [...counts2,  {key:id,value: 1 }];
-//   }
-//   console.log(counts2)
-// }
 
- 
+
+
+const cartCount = (id) =>{ 
+  const exist = cart.find((x) =>x.id == id);
+  if(exist)  {
+    return(exist.qty);
+  }else{
+    return 0;
+  }
+}
+
+const getDirectory = async () => {
+  try {
+    const value = await AsyncStorage.getItem('@posdirectory');
+    if (value !== null) {
+      // We have data!!
+      
+      setDirectory(value);
+    }
+  } catch (error) {
+    // Error retrieving data
+  }
+};
+
+
+
+useEffect(() => {
+  getDirectory();
+}, []);
+
+useEffect(() => {
+  if(directory){
+    getIp();
+  }
+}, [directory]);
+
+
+
+useEffect(() => {
+  setCart(cart);    
+}, [cart]);
+
+useEffect(()=>{
+  // buildCount()   ;
+},[])
+
+useEffect(() => {
+  retrieveData();
+}, []);
+
+useEffect(() => {
+  freeCount();
+}, [cart]);
 
 
   return (
@@ -467,7 +454,7 @@ const getCount = (id) =>{
             // #F16B1F
             <View style={ styles.cathold }>              
               <Text style={styles.catMenu}>{item.name}</Text>
-              <Text style={styles.catMenu}>{getCount(item.id)} </Text>
+              <Text style={styles.catMenu}>{cartCount(item.id)} </Text>
               <TouchableOpacity onPress={() => saveToCart(item)}> 
               <AntDesign name="pluscircle" size={30} color="black" />
               </TouchableOpacity>
@@ -485,6 +472,7 @@ const getCount = (id) =>{
       }
       </View>
        </View>
+     
     </View>
     </SafeAreaView>
      </>

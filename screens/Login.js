@@ -6,14 +6,17 @@ import MyButton from "../components/MyButton";
 // import { AsyncStorage } from 'react-native';
 import MyActivityIndicator from '../components/MyActivityIndicator';
 import { UserContext } from '../components/UserContext';
+import * as NavigationBar from 'expo-navigation-bar';
 
 const Login = ({navigation}) => {
+  NavigationBar.setBackgroundColorAsync("#000000");
     const [username,setUsername] = useState('');
     const [password,setPassword] = useState('');
     const [ipAddress,setIpAddress] = useState(''); 
     const [showA,setShowA] = useState(false) // display or hide activity indicator like loading
     const [user, setUser] = useContext(UserContext);
     const [deviceId,setDeviceId] = useState(''); 
+    const [directory,setDirectory] = useState('');
    
     function drag()
     {
@@ -28,9 +31,17 @@ const Login = ({navigation}) => {
       navigation.navigate("IpAddress");
     }
 
+    
     useEffect(() => {
-      getIp();
+      getDirectory();
     }, []);
+
+    useEffect(() => {
+      if(directory)
+      {
+        getIp();
+      }
+    }, [directory]);
 
     useEffect(() => {
       drag();
@@ -52,11 +63,11 @@ const Login = ({navigation}) => {
 
 
     const doLogin = async () => {
-      // if(deviceId==null)
-      // {
-      //   alert('You are not authorized');
-      //   return;
-      // }
+      if(deviceId==null)
+      {
+        alert('You are not authorized');
+        return;
+      }
 
      
       setShowA(true);
@@ -67,7 +78,7 @@ const Login = ({navigation}) => {
           };
       const res = await fetch(
         // "http://"+ipAddress+":80/jstore/index.php?r=site/applogin",
-        "http://"+ipAddress+":80/amonie/index.php?r=site/applogin",
+        "http://"+ipAddress+":80/"+directory+"/index.php?r=site/applogin",
         {
           method: "POST",
           headers: {
@@ -131,6 +142,21 @@ const Login = ({navigation}) => {
       }
     };
 
+    
+
+
+    const getDirectory = async () => {
+      try {
+        const value = await AsyncStorage.getItem('@posdirectory');
+        if (value !== null) {
+          // We have data!!
+          
+          setDirectory(value);
+        }
+      } catch (error) {
+        // Error retrieving data
+      }
+    };
 
     const getIp = async () => {
       try {
@@ -161,9 +187,9 @@ const Login = ({navigation}) => {
     StatusBar.setHidden(true, 'none');
   return (
     <>
-     <StatusBar hidden={true} />
-     <StatusBar hidden />
-     <StatusBar  backgroundColor={'#ffffff00'} />
+     {/* <StatusBar hidden={true} />
+     <StatusBar hidden /> */}
+     <StatusBar  backgroundColor={'#000000'} />
     {/* <KeyboardAvoidingView> */}
      <ImageBackground source={require("../assets/bc/back2.jpg")} style={styles.image}>
     <View style={styles.container}>

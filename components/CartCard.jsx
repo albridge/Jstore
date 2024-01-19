@@ -17,17 +17,17 @@ const CartCard = ({item_name,qty,price,item,add,sub,rem}) => {
 <View style={styles.holder}>
   <View style={styles.singleHolder}>              
     <Text style={{fontWeight:"bold", fontSize:16}}>{item_name.toUpperCase()}</Text>
-    <Ionicons name="ios-trash-bin" size={24} color="#F16B1F" onPress={(e) => rem(e, item)} />
+    {/* <Ionicons name="ios-trash-bin" size={24} color="#F16B1F" onPress={(e) => rem(e, item)} /> */}
         
   </View>
 
-  {/* <View style={styles.singleHolder}>               */}
+  <View style={styles.singleHolder}>              
    
-    {/* <AntDesign name="pluscircle" size={24} color="black" onPress={() => add(item)} /> */}
-    {/* <AntDesign name="minuscircle" size={24} color="black" onPress={(e) => sub(e, item)} /> */}
+    <AntDesign name="pluscircle" size={24} color="black" onPress={() => add(item)} />
+    <AntDesign name="minuscircle" size={24} color="black" onPress={(e) => sub(e, item)} />
       
-    {/* <Ionicons name="ios-trash-bin" size={24} color="#F16B1F" onPress={(e) => rem(e, item)} /> */}
-  {/* </View> */}
+    <Ionicons name="ios-trash-bin" size={24} color="#F16B1F" onPress={(e) => rem(e, item)} />
+  </View>
   
 
   <View style={styles.singleHolder}>              

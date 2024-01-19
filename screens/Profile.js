@@ -12,6 +12,7 @@ import Today from './Today';
 const Profile = ({navigation}) => {
 
   // const [animatePress, setAnimatePress] = useState(new Animated.Value(1))
+  
 
   const [date, setDate] = useState(new Date(1598051730000));
   const [FromDate, setFromDate] = useState(new Date(1598051730000));

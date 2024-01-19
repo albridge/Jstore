@@ -34,6 +34,15 @@
         "projectId": "12447a9d-5705-48b3-85b6-cd043d27fb39"
       }
     },
-    "owner": "albridge"
+    "owner": "albridge",
+    "plugins": [
+      [
+        "expo-build-properties", {
+        "android": {
+          "usesCleartextTraffic": true
+        }
+       
+      }]
+    ]
   }
 }

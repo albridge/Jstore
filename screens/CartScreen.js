@@ -19,7 +19,7 @@ import { UserContext } from "../components/UserContext";
 import MyButton from "../components/MyButton";
 import MyActivityIndicator from '../components/MyActivityIndicator';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-
+// this file doesnt seem to be actively doing anything in our code
 const Cart = ({ navigation, route }) => {
   const [cart, setCart] = useContext(CartContext);
   const [user, setuser] = useContext(UserContext);

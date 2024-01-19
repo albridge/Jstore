@@ -46,35 +46,11 @@ const Cart = ({ navigation, route }) => {
   const [showD, setShowD] = useState(false);
   const [counts,setCounts] = useState([]);
   const [deviceId,setDeviceId] = useState(''); 
+  const [directory,setDirectory] = useState('');
   //   const { items } = route.params;
   //   console.log("inside cart", cart);
 
-  useEffect(() => {
-    getIp();  
-  }, []);
 
-  // useEffect(() => {
-  //   getTid();  
-  // }, [tid]);
-
-  useEffect(() => {
-    getToday();  
-  }, [ipAddress]);
-
- 
-
-  useEffect(() => {
-    getId();   
-  }, []);
-
-  useEffect(()=>{
-    setCart(cart)   ;
-  },[cart])
-
-
-
-
- 
 
   const getIp = async () => {
     try {
@@ -236,7 +212,7 @@ const Cart = ({ navigation, route }) => {
 
    const checkout = async () => {  
   //  return;
-    // console.log(cart); return;
+    // console.log(directory,ipAddress); return;
     let load = isDiv();
     if(!tableNumber)
     {
@@ -248,7 +224,7 @@ const Cart = ({ navigation, route }) => {
     try{  
      
     const res = await fetch(
-      "http://"+ipAddress+":80/amonie/index.php?r=inventory/salesapi",
+      "http://"+ipAddress+":80/"+directory+"/index.php?r=inventory/salesapi",
       {
         method: "POST",
         headers: {
@@ -272,7 +248,15 @@ const Cart = ({ navigation, route }) => {
       setSelectedList(null)
       getToday();      
     }else if(data.result==5){
-      alert('This device is registred but not approved by admin. Please contact admin');
+      alert('This device is registered but not approved by admin. Please contact admin');
+      return;
+    }else if(data.result==8){
+      alert('Selected table is still currently occupied. Please chose another table number');
+      return;
+    }else if(data.result==9){
+      // alert(data.message);
+      console.log(data.message)
+      return;
     }
     // console.log(data);
   
@@ -377,7 +361,7 @@ const getToday = async () => {
   try{  
    setShowA(true)
   const res = await fetch(
-    "http://"+ipAddress+"/amonie/index.php?r=inventory/todays&user="+user,
+    "http://"+ipAddress+"/"+directory+"/index.php?r=inventory/todays&user="+user,
     {
       method: "GET",
       headers: {
@@ -469,9 +453,47 @@ const cancelCart = () => {
 //   console.log(counts)
 // }
 
+const getDirectory = async () => {
+  try {
+    const value = await AsyncStorage.getItem('@posdirectory');
+    if (value !== null) {
+      // We have data!!
+      
+      setDirectory(value);
+    }
+  } catch (error) {
+    // Error retrieving data
+  }
+};
+
+
+useEffect(() => {    
+  getDirectory();     
+}, []);
+
+useEffect(() => {
+if(directory){
+  getIp();
+}  
+}, [directory]);
+
+// useEffect(() => {
+//   getTid();  
+// }, [tid]);
+
+useEffect(() => {
+getToday();  
+}, [ipAddress]);
 
 
 
+useEffect(() => {
+getId();   
+}, []);
+
+useEffect(()=>{
+setCart(cart)   ;
+},[cart])
   return (
     <SafeAreaView style={{flex:1, marginTop:20}}> 
     <View style={{marginLeft:10, marginRight:10, marginBottom:10}}>

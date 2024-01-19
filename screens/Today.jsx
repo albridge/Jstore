@@ -23,6 +23,7 @@ const Today = ({navigation}) => {
   const [showA,setShowA] = useState(true)
   const [user, setuser] = useContext(UserContext);
   const [myOrders, setMyOrders] = useState(null);
+  const [directory,setDirectory] = useState('');
   
 
   useLayoutEffect(() => {
@@ -36,9 +37,14 @@ const Today = ({navigation}) => {
     });
   }, []);
 
+
+  useEffect(() => {
+    getDirectory();   
+  }, []);
+
   useEffect(() => {
     getIp();   
-  }, []);
+  }, [directory]);
 
   useEffect(() => {  
     getToday();
@@ -68,7 +74,7 @@ const Today = ({navigation}) => {
     try{  
      setShowA(true)
     const res = await fetch(
-      "http://"+ipAddress+":80/amonie/index.php?r=inventory/todays&user="+user,
+      "http://"+ipAddress+":80/"+directory+"/index.php?r=inventory/todays&user="+user,
       {
         method: "GET",
         headers: {
@@ -96,7 +102,7 @@ const Today = ({navigation}) => {
   //   try{  
   //    setShowA(true)
   //   const res = await fetch(
-  //     "http://"+ipAddress+":80/amonie/index.php?r=inventory/details&id="+id,
+  //     "http://"+ipAddress+":80/"+directory+"/index.php?r=inventory/details&id="+id,
   //     {
   //       method: "GET",
   //       headers: {
@@ -122,6 +128,19 @@ const Today = ({navigation}) => {
   const details = (id) =>{   
     navigation.navigate("Details", { id:id, deal:myOrders });
   }
+
+  const getDirectory = async () => {
+    try {
+      const value = await AsyncStorage.getItem('@posdirectory');
+      if (value !== null) {
+        // We have data!!
+        
+        setDirectory(value);
+      }
+    } catch (error) {
+      // Error retrieving data
+    }
+  };
 
   return (
     
