@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "JStore",
-    "slug": "jstore",
+    "name": "XSale",
+    "slug": "xsale",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -31,18 +31,19 @@
     },
     "extra": {
       "eas": {
-        "projectId": "12447a9d-5705-48b3-85b6-cd043d27fb39"
+        "projectId": "aeac95ba-036e-42a8-b244-7df48f10ac05"
       }
     },
     "owner": "albridge",
     "plugins": [
       [
-        "expo-build-properties", {
-        "android": {
-          "usesCleartextTraffic": true
+        "expo-build-properties",
+        {
+          "android": {
+            "usesCleartextTraffic": true
+          }
         }
-       
-      }]
+      ]
     ]
   }
 }

@@ -47,6 +47,7 @@ const Cart = ({ navigation, route }) => {
   const [counts,setCounts] = useState([]);
   const [deviceId,setDeviceId] = useState(''); 
   const [directory,setDirectory] = useState('');
+  const [showButton, setShowButton] = useState(true)
   //   const { items } = route.params;
   //   console.log("inside cart", cart);
 
@@ -83,7 +84,7 @@ const Cart = ({ navigation, route }) => {
   const Subtract = (e, item) => {
     let data = item;
     let nItem = null;
-    counting(item.id)
+    // counting(item.id)
     const exist = cart.find((x) => x.id === data.id);
     if (exist) {
       if (exist.qty <= 1) {
@@ -499,9 +500,11 @@ setCart(cart)   ;
     <View style={{marginLeft:10, marginRight:10, marginBottom:10}}>
    <Button title="Cancel Order" onPress={cancelCart} color="black" />
    </View>
+ 
+   {showButton && 
    <View style={{marginEnd:10,marginStart:10}}>
    <Button title="Add to Existing Order" color="#349B2F" onPress={runCat} />
-   </View>
+   </View>}
    {showD &&
    selectedList && <View style={{marginEnd:10,marginStart:10, marginBottom:23}}><SelectList
     setSelected = {(val) => setSelected(val)}

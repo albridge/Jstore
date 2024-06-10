@@ -77,7 +77,7 @@ const Login = ({navigation}) => {
           password,      
           };
       const res = await fetch(
-        // "http://"+ipAddress+":80/jstore/index.php?r=site/applogin",
+        // "http://"+ipAddress+":80/"+directory+"/index.php?r=site/applogin",
         "http://"+ipAddress+":80/"+directory+"/index.php?r=site/applogin",
         {
           method: "POST",
